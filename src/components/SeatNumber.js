@@ -7,17 +7,25 @@ export function seatNumber(text) {
   return data;
 }
 export function jsonGenerate(data) {
-  let jsonData = [];
-  for (let i = 0; i < data?.rows; i++) {
-    for (let j = 0; j < data?.columns; j++) {
-      // Calculate cx and cy based on row (i) and column (j)
-      jsonData.push({
-        cx: 20 + j * 20, // Increment cx by 20 for each column
-        cy: 20 + i * 20, // Increment cy by 20 for each row
-        row: toLetters(i + 1),
-        number: j + 1
-      });
+  const result = [];
+// Loop to create rows
+for (let r = 0; r < data?.rows; r++) {
+    let rowData = [];
+    
+    // Loop to create each element in a row
+    for (let c = 1; c <= data?.columns; c++) {
+        rowData.push({
+            cx: c * 20, // Calculate the x-coordinate
+            cy: (r + 1) * 20, // Calculate the y-coordinate based on row
+            number: c // The number of the element
+        });
     }
-  }
-  return jsonData;
+
+    // Add the row to the result array
+    result.push({
+        row: String.fromCharCode(65 + r), // Convert row number to letter (A, B, ...)
+        rowData: rowData
+    });
+}
+return result
 }

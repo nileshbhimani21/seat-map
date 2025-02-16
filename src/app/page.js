@@ -7,18 +7,6 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [isSeat, setIsSeat] = useState([]);
-  // {
-  //   cx: 20,
-  //   cy: 20,
-  //   row: "A",
-  //   number: 1
-  // },
-  // {
-  //   cx: 40,
-  //   cy: 20,
-  //   row: "A",
-  //   number: 2
-  // }
   const [target, setTarget] = useState(null);
   console.log("isSeat, target", isSeat, target);
   useEffect(() => {
@@ -56,20 +44,36 @@ export default function Home() {
     if (side === "cx") {
       if (count === "plus") {
         let array = isSeat.map((x) => {
-          if (x?.cx === target.cx && x?.cy === target.cy && x?.row === target?.row && x?.number === target?.number) {
-            return { ...x, cx: x?.cx + 10 };
+          if (x?.row === target?.row) {
+            let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
+                if (y?.number === target.number) {
+                  return { ...y, cx: y?.cx + 10 };
+                }
+                return y
+            }) : []
+            return {
+              ...x, rowData: subArray?.filter((x) => x)
+            }
           } else {
-            return x;
-          }
+            return x
+          }          
         });
         setIsSeat(array);
         setTarget({ ...target, cx: target?.cx + 10 });
       } else {
-        let array = isSeat.map((x) => {
-          if (x?.cx === target.cx && x?.cy === target.cy && x?.row === target?.row && x?.number === target?.number) {
-            return { ...x, cx: x?.cx - 10 };
+        let array = isSeat.map((x) => {         
+          if (x?.row === target?.row) {
+            let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
+                if (y?.number === target.number) {
+                  return { ...y, cx: y?.cx - 10 };
+                }
+                return y
+            }) : []
+            return {
+              ...x, rowData: subArray?.filter((x) => x)
+            }
           } else {
-            return x;
+            return x
           }
         });
         setIsSeat(array);
@@ -77,22 +81,38 @@ export default function Home() {
       }
     } else {
       if (count === "plus") {
-        let array = isSeat.map((x) => {
-          if (x?.cx === target.cx && x?.cy === target.cy && x?.row === target?.row && x?.number === target?.number) {
-            return { ...x, cy: x?.cy + 10 };
+        let array = isSeat.map((x) => {         
+          if (x?.row === target?.row) {
+            let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
+                if (y?.number === target.number) {
+                  return { ...y, cy: y?.cy + 10 };
+                }
+                return y
+            }) : []
+            return {
+              ...x, rowData: subArray?.filter((x) => x)
+            }
           } else {
-            return x;
-          }
+            return x
+          } 
         });
         setIsSeat(array);
         setTarget({ ...target, cy: target?.cy + 10 });
       } else {
-        let array = isSeat.map((x) => {
-          if (x?.cx === target.cx && x?.cy === target.cy && x?.row === target?.row && x?.number === target?.number) {
-            return { ...x, cy: x?.cy - 10 };
+        let array = isSeat.map((x) => {         
+          if (x?.row === target?.row) {
+            let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
+                if (y?.number === target.number) {
+                  return { ...y, cy: y?.cy - 10 };
+                }
+                return y
+            }) : []
+            return {
+              ...x, rowData: subArray?.filter((x) => x)
+            }
           } else {
-            return x;
-          }
+            return x
+          } 
         });
         setIsSeat(array);
         setTarget({ ...target, cy: target?.cy - 10 });
@@ -101,14 +121,29 @@ export default function Home() {
   };
   const deleteSeat = async () => {
     let array = isSeat.map((x) => {
-      if (x?.cx === target.cx && x?.cy === target.cy) {
-        return;
-      } else {
-        if (x?.cy === target.cy && target.number < x?.number) {
-          return { ...x, number: x?.number - 1 };
+      if (x?.row === target?.row) {
+        let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
+          if (y?.number !== target.number) {
+            if (target.number < y?.number) {
+              return { ...y, number: y?.number - 1 };
+            }
+            return y
+          }
+        }) : []
+        return {
+          ...x, rowData: subArray?.filter((x) => x)
         }
-        return x;
+      } else {
+        return x
       }
+      // if (x?.cx === target.cx && x?.cy === target.cy) {
+      //   return;
+      // } else {
+      //   if (x?.cy === target.cy && target.number < x?.number) {
+      //     return { ...x, number: x?.number - 1 };
+      //   }
+      //   return x;
+      // }
     });
 
     setIsSeat(array?.filter((x) => x));
