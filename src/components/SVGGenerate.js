@@ -43,6 +43,7 @@ export function SVGGenerate(paths) {
         "</text></g>\n";
     }
   }
+  svg+= '<g class="stage"><rect width="200" height="100" x="0" y="0" rx="5" ry="5" stroke="#444444" fill="#a2a2a2" /><text font-size="20" x="70" y="50">Stage</text></g>\n';
   svg += "</svg>\n";
   return svg;
 }

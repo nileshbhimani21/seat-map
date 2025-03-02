@@ -6,11 +6,13 @@ import { SVGGenerate } from "@/components/SVGGenerate";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [isSeat, setIsSeat] = useState([]);
+  const [data, setData] = useState(null);
   const [target, setTarget] = useState(null);
-  console.log("isSeat, target", isSeat, target);
+  console.log("data, target", data, target);
+
   useEffect(() => {
-    // canvasDrow2(isSeat);
+    
+    // canvasDrow2(data.isSeat);
     document.addEventListener("click", onRowSelect);
     if (target !== null) {
       document.addEventListener("keydown", onKeyDown, true);
@@ -43,7 +45,7 @@ export default function Home() {
   const onMove = (side, count) => {
     if (side === "cx") {
       if (count === "plus") {
-        let array = isSeat.map((x) => {
+        let array = data?.isSeat?.map((x) => {
           if (x?.row === target?.row) {
             let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
                 if (y?.number === target.number) {
@@ -58,10 +60,10 @@ export default function Home() {
             return x
           }          
         });
-        setIsSeat(array);
+        setData({...data, isSeat:array});
         setTarget({ ...target, cx: target?.cx + 10 });
       } else {
-        let array = isSeat.map((x) => {         
+        let array = data?.isSeat?.map((x) => {         
           if (x?.row === target?.row) {
             let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
                 if (y?.number === target.number) {
@@ -76,12 +78,12 @@ export default function Home() {
             return x
           }
         });
-        setIsSeat(array);
+        setData({...data, isSeat:array});
         setTarget({ ...target, cx: target?.cx - 10 });
       }
     } else {
       if (count === "plus") {
-        let array = isSeat.map((x) => {         
+        let array = data?.isSeat?.map((x) => {         
           if (x?.row === target?.row) {
             let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
                 if (y?.number === target.number) {
@@ -96,10 +98,10 @@ export default function Home() {
             return x
           } 
         });
-        setIsSeat(array);
+        setData({...data, isSeat:array});
         setTarget({ ...target, cy: target?.cy + 10 });
       } else {
-        let array = isSeat.map((x) => {         
+        let array = data?.isSeat?.map((x) => {         
           if (x?.row === target?.row) {
             let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
                 if (y?.number === target.number) {
@@ -114,13 +116,13 @@ export default function Home() {
             return x
           } 
         });
-        setIsSeat(array);
+        setData({...data, isSeat:array});
         setTarget({ ...target, cy: target?.cy - 10 });
       }
     }
   };
   const deleteSeat = async () => {
-    let array = isSeat.map((x) => {
+    let array = data?.isSeat?.map((x) => {
       if (x?.row === target?.row) {
         let subArray = x?.rowData?.length > 0 ? x?.rowData?.map(y => {
           if (y?.number !== target.number) {
@@ -146,9 +148,25 @@ export default function Home() {
       // }
     });
 
-    setIsSeat(array?.filter((x) => x));
+    setData({...data, isSeat:array?.filter((x) => x)});
     setTarget(null);
   };
+
+  const reverseNumber = (type) => {
+    if(type === "row"){
+      const rows = data?.isSeat?.map((x,i) => {
+        return {...x,rowData: data?.isSeat[data?.isSeat?.length - (i + 1)]?.rowData}
+      })
+      setData({...data, isSeat:rows});
+    } else {
+      const seat = data?.isSeat?.map((x) => {
+        return {...x,rowData: x?.rowData?.map((y,i)=> {
+          return  {...y,number: x?.rowData[x?.rowData?.length - (i + 1)]?.number}
+        })}
+      })
+      setData({...data, isSeat:seat});
+    }
+  }
 
   return (
     <main className="flex h-screen overflow-hidden divide-x divide-gray-500 ">
@@ -158,6 +176,8 @@ export default function Home() {
       {/* <canvas id="canvasDrow" /> */}
       <div className="px-2 min-w-80">
         <h1 className="text-center pt-3 text-2xl">Seats Map</h1>
+        <button type="button" className="px-2 border-2 border-gray-500 mr-2" onClick={()=>reverseNumber("row")}>Row reverse</button>
+        <button type="button" className="px-2 border-2 border-gray-500 mr-2" onClick={()=>reverseNumber("seat")}>Seat reverse</button>
         {target !== null ? (
           <>
             <h6 className="text-center mb-3">{target?.row + "-" + target?.number}</h6>
@@ -186,16 +206,16 @@ export default function Home() {
         ) : null}
       </div>
       <div className="p-5">
-        {isSeat.length > 0 ? (
+        {data?.isSeat?.length > 0 ? (
           <div
             id="drawing"
             className="h-screen w-screen overflow-auto"
             dangerouslySetInnerHTML={{
-              __html: SVGGenerate(isSeat)
+              __html: SVGGenerate(data?.isSeat)
             }}
           />
         ) : (
-          <CreateSeat setIsSeat={setIsSeat} />
+          <CreateSeat setData={setData} />
         )}
       </div>
     </main>

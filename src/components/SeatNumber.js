@@ -1,4 +1,3 @@
-import { toLetters } from "./ToLetters";
 
 export function seatNumber(text) {
   let data = text.split("-");

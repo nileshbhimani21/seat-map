@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { jsonGenerate } from "./SeatNumber";
 
-export default function CreateSeat({ setIsSeat }) {
+export default function CreateSeat({ setData }) {
   const {
     register,
     handleSubmit,
@@ -15,7 +15,7 @@ export default function CreateSeat({ setIsSeat }) {
   });
   const onSubmit = (data) => {
     if (Object.keys(errors).length === 0) {
-      setIsSeat(jsonGenerate(data));
+      setData({isSeat: jsonGenerate(data)});
     }
   };
   return (
