@@ -1,4 +1,4 @@
-export function SVGGenerate(paths) {
+export function SVGGenerate(paths, stage) {
   var svg = "";
   svg += '<svg width="20000" height="20000" xmlns="http://www.w3.org/2000/svg">\n';
   for (var i in paths) {   
@@ -43,7 +43,9 @@ export function SVGGenerate(paths) {
         "</text></g>\n";
     }
   }
-  svg+= '<g class="stage"><rect width="200" height="100" x="0" y="0" rx="5" ry="5" stroke="#444444" fill="#a2a2a2" /><text font-size="20" x="70" y="50">Stage</text></g>\n';
+  if(stage){
+    svg+= '<g class="stage"><rect width="200" height="70" x="'+ stage.cx +'" y="'+ stage.cy +'" rx="5" ry="5" stroke="#444444" fill="#f4f4f4" /><text font-size="20" x="'+ (stage.cx + 60) +'" y="'+( stage.cy + 40) +'">STAGE</text></g>\n';
+  }
   svg += "</svg>\n";
   return svg;
 }
